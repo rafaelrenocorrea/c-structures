@@ -26,11 +26,11 @@ int rotinaTeste(Lista *lista){
     if(lista == NULL)return 1;
 
     for(i = 0; i < 5; i++){
-        if(insereNo(lista, i + 1) != 0)return 1;  
+        if(insereNo(lista, i + 1, "front") != 0)return 1; // teste de inserção no começo da lista
     }
 
     for(i = 5; i < 10; i++){
-        if(insereNoFinal(lista, i + 1) != 0)return 1;  
+        if(insereNo(lista, i + 1, "back") != 0)return 1; // teste de inserção no final da lista
     }
 
     if(imprimeLista(lista) != 0)return 1;

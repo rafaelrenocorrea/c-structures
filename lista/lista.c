@@ -8,11 +8,12 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h> // strcmp()
 
 #include "lista.h"
 
 struct no{
-    int valor;
+    int chave;
     struct no *prox;
 };
 
@@ -33,32 +34,49 @@ Lista *fazLista(){
 }
 
 // Função para alocar o ponteiro para o nó
-No *fazNo(int valor){
+No *fazNo(int chave){
     No *novoNo = (No*) malloc(sizeof(No));
     if(novoNo == NULL)return NULL;
 
-    novoNo->valor = valor;
-    novoNo->prox = NULL; // por padrão o nó é inserido no final da lista
+    novoNo->chave = chave;
+    novoNo->prox = NULL; // por padrão, o nó é inserido no final da lista
 
     return novoNo;
 }
 
-// Função para inserir um novo nó no começo da lista
-int insereNo(Lista *lista, int valor){
+// Função para inserir um novo nó na lista
+int insereNo(Lista *lista, int chave, char *modo){
     if(lista == NULL)return 1;
 
-    No *novoNo = fazNo(valor);
-    if(novoNo == NULL)return 2;
+    if(strcmp(modo, "front") == 0){ // insere no começo da lista
+        No *novoNo = fazNo(chave);
+        if(novoNo == NULL)return 2;
 
-    // Inserção O(1)
-    if(lista->qtd > 0){
-        novoNo->prox = lista->raiz;
+        if(lista->qtd > 0){
+            novoNo->prox = lista->raiz;
 
-        lista->raiz = novoNo;
-    }else{ // se é o primeiro nó
-        lista->raiz = novoNo;
+            lista->raiz = novoNo;
+        }else{ // se é o primeiro nó
+            lista->raiz = novoNo;
+        }
+    }else if(strcmp(modo, "back") == 0){ // insere no final da lista
+        No *novoNo = fazNo(chave);
+        if(novoNo == NULL)return 2;
+
+        if(lista->qtd > 0){
+            No *aux;
+
+            aux = lista->raiz;
+
+            while(aux->prox != NULL)aux = aux->prox; // O(n)
+
+            aux->prox = novoNo;
+        }else{ // se é o primeiro nó
+            lista->raiz = novoNo;
+        }
+    }else{ // modo inválido
+        return 3;
     }
-    //
 
     lista->qtd++;
 
@@ -66,32 +84,8 @@ int insereNo(Lista *lista, int valor){
 }
 //
 
-// Função para inserir um novo nó no final da lista
-int insereNoFinal(Lista *lista, int valor){
-    if(lista == NULL)return 1;
-
-    No *novoNo = fazNo(valor);
-    if(novoNo == NULL)return 2;
-
-    if(lista->qtd > 0){
-        No *aux;
-
-        aux = lista->raiz;
-
-        while(aux->prox != NULL)aux = aux->prox; // O(n)
-
-        aux->prox = novoNo;
-    }else{ // se é o primeiro nó
-        lista->raiz = novoNo;
-    }
-
-    lista->qtd++;
-
-    return 0;
-}
-
 // Função para remover um nó da lista
-int removeNo(Lista *lista, int valor){
+int removeNo(Lista *lista, int chave){
     if(lista == NULL)return 1;
 
     No *ant, *aux;
@@ -100,8 +94,8 @@ int removeNo(Lista *lista, int valor){
         if(lista->qtd > 1){
             aux = lista->raiz;
 
-            if(aux->valor != valor){
-                while((aux != NULL) && (aux->valor != valor)){
+            if(aux->chave != chave){
+                while((aux != NULL) && (aux->chave != chave)){
                     ant = aux;
 
                     aux = aux->prox;
@@ -140,11 +134,11 @@ int imprimeLista(Lista *lista){
     if(lista->qtd > 0){
         printf("Lista = {");
         for(int i = 0; i < lista->qtd - 1; i++){
-            printf("%d, ", aux->valor);
+            printf("%d, ", aux->chave);
 
             aux = aux->prox;
         }
-        printf("%d}\n", aux->valor);
+        printf("%d}\n", aux->chave);
     }else printf("Lista = {}\n");
 
     return 0;

@@ -18,33 +18,25 @@ Lista *fazLista();
 // Retorno:
 // - Ponteiro do tipo Lista (se nulo, não havia memória RAM).
 
-No *fazNo(int valor);
+No *fazNo(int chave);
 // Função para alocar o ponteiro para o nó
 //
 // Retorno:
 // - Ponteiro do tipo Nó (se nulo, não havia memória RAM).
 
-int insereNo(Lista *lista, int valor);
-// Função para inserir um novo nó no começo da lista
+int insereNo(Lista *lista, int chave, char *modo);
+// Função para inserir um novo nó na lista
 //
-// Complexidade: O(1)
-//
-// Retornos:
-// - 0: tudo certo;
-// - 1: a lista nunca foi alocada;
-// - 2: memória RAM insuficiente.
-
-int insereNoFinal(Lista *lista, int valor);
-// Função para inserir um novo nó no final da lista
-//
-// Complexidade: O(n)
+// Modos:
+//     - "front": insere o nó no começo da lista (O(1));
+//     - "back": insere o nó no final da lista (O(n)).
 //
 // Retornos:
 // - 0: tudo certo;
 // - 1: a lista nunca foi alocada;
 // - 2: memória RAM insuficiente.
 
-int removeNo(Lista *lista, int valor);
+int removeNo(Lista *lista, int chave);
 // Função para remover um nó da lista
 //
 // Retornos:
