@@ -14,12 +14,13 @@
 
 struct no{
     int chave;
+    struct info *dados;
     struct no *prox;
 };
 
 struct lista{
-    struct no *raiz;
     int qtd;
+    struct no *raiz;
 };
 
 // Função para alocar o ponteiro para a lista
@@ -34,24 +35,33 @@ Lista *fazLista(){
 }
 
 // Função para alocar o ponteiro para o nó
-No *fazNo(int chave){
+No *fazNo(int chave, Info *dados){
     No *novoNo = (No*) malloc(sizeof(No));
     if(novoNo == NULL)return NULL;
 
+    Info *novoDado = (Info*) malloc(sizeof(Info));
+    if(novoDado == NULL){
+        free(novoNo);
+
+        return NULL;
+    }
+    *novoDado = *dados;
+
     novoNo->chave = chave;
+    novoNo->dados = novoDado;
     novoNo->prox = NULL; // por padrão, o nó é inserido no final da lista
 
     return novoNo;
 }
 
 // Função para inserir um novo nó na lista
-int insereNo(Lista *lista, int chave, char *modo){
+int insereNo(Lista *lista, int chave, Info *dados, char *modo){
     if(lista == NULL)return 1;
 
-    if(strcmp(modo, "front") == 0){ // insere no começo da lista
-        No *novoNo = fazNo(chave);
-        if(novoNo == NULL)return 2;
+    No *novoNo = fazNo(chave, dados);
+    if(novoNo == NULL)return 2;
 
+    if(strcmp(modo, "front") == 0){ // insere o novo nó no começo da lista
         if(lista->qtd > 0){
             novoNo->prox = lista->raiz;
 
@@ -59,10 +69,7 @@ int insereNo(Lista *lista, int chave, char *modo){
         }else{ // se é o primeiro nó
             lista->raiz = novoNo;
         }
-    }else if(strcmp(modo, "back") == 0){ // insere no final da lista
-        No *novoNo = fazNo(chave);
-        if(novoNo == NULL)return 2;
-
+    }else if(strcmp(modo, "back") == 0){ // insere o novo nó no final da lista
         if(lista->qtd > 0){
             No *aux;
 
@@ -125,23 +132,26 @@ int removeNo(Lista *lista, int chave){
     return 0;
 }
 
-// Função para imprimir o conteúdo da lista
-int imprimeLista(Lista *lista){
-    if(lista == NULL)return 1;
-    
-    No *aux = lista->raiz;
+// Função para consultar o conteúdo de um nó da lista a partir da chave
+Info *consultaNo(Lista *lista, int chave){
+    if(lista == NULL)return NULL;
 
     if(lista->qtd > 0){
-        printf("Lista = {");
-        for(int i = 0; i < lista->qtd - 1; i++){
-            printf("%d, ", aux->chave);
+        No *aux = lista->raiz;
 
-            aux = aux->prox;
+        while((aux != NULL) && (aux->chave != chave))aux = aux->prox;
+
+        if((aux != NULL) && (aux->chave == chave)){ // se encontrou
+            return aux->dados;
+        }else{ // se não encontrou
+            return NULL;
         }
-        printf("%d}\n", aux->chave);
-    }else printf("Lista = {}\n");
+    }else return NULL; // a lista está vazia
+}
 
-    return 0;
+// Função para acessar o tamanho da lista
+int tamanhoLista(Lista *lista){
+    return lista->qtd;
 }
 
 // Função para liberar a lista da memória RAM
@@ -155,6 +165,7 @@ int liberaLista(Lista *lista){
     while(ant != NULL){
         prox = ant->prox;
 
+        free(ant->dados);
         free(ant);
 
         ant = prox;
