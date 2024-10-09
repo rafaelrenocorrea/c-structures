@@ -45,7 +45,8 @@ int insereNo(Lista *lista, int chave, Info *dados, char *modo);
 // Retornos:
 // - 0: tudo certo;
 // - 1: a lista nunca foi alocada;
-// - 2: memória RAM insuficiente.
+// - 2: memória RAM insuficiente;
+// - 3: o modo não foi implementado.
 
 int removeNo(Lista *lista, int chave);
 // Função para remover um nó da lista

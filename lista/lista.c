@@ -102,15 +102,19 @@ int removeNo(Lista *lista, int chave){
             aux = lista->raiz;
 
             if(aux->chave != chave){
-                while((aux != NULL) && (aux->chave != chave)){
+                while((aux != NULL) && (aux->chave != chave)){ // procura o nó
                     ant = aux;
 
                     aux = aux->prox;
                 }
 
                 if(aux != NULL){
-                    ant->prox = aux->prox;
-
+                    if(aux->prox != NULL){
+                        ant->prox = aux->prox;
+                    }else{ // é o último elemento
+                        ant->prox = NULL;
+                    }
+                    
                     free(aux);
                 }else return 3;
             }else{ // se é o primeiro nó
@@ -141,7 +145,7 @@ Info *consultaNo(Lista *lista, int chave){
 
         while((aux != NULL) && (aux->chave != chave))aux = aux->prox;
 
-        if((aux != NULL) && (aux->chave == chave)){ // se encontrou
+        if((aux != NULL)){ // se encontrou
             return aux->dados;
         }else{ // se não encontrou
             return NULL;
