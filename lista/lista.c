@@ -145,7 +145,7 @@ Info *consultaNo(Lista *lista, int chave){
 
         while((aux != NULL) && (aux->chave != chave))aux = aux->prox;
 
-        if((aux != NULL)){ // se encontrou
+        if(aux != NULL){ // se encontrou
             return aux->dados;
         }else{ // se não encontrou
             return NULL;
